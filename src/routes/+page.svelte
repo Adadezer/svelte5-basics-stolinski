@@ -1,5 +1,10 @@
 <script>
 	import Header from './Header.svelte';
+
+	let name = $state('Iwazaki');
 </script>
 
-<Header name="5" />
+<Header {name} />
+
+<label for="name">Nome:</label>
+<input id="name" type="text" bind:value={name} />
