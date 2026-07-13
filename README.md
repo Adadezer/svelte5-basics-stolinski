@@ -1,4 +1,6 @@
-# sv
+# Estudo sobre Svelte 5
+
+<a href="https://www.youtube.com/watch?v=8DQailPy3q8&t=4s">tutorial</a>
 
 Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
 
