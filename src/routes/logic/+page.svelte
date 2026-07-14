@@ -10,10 +10,6 @@
 <main>
 	<p>Etapa: {formState.step + 1}</p>
 
-	{#if formState.error}
-		<p class="error">{formState.error}</p>
-	{/if}
-
 	{#if formState.step === 0}
 		<div>
 			<label for="name">Seu nome</label>
@@ -49,4 +45,14 @@
 		<p>Nome: {formState.name}</p>
 		<p>Data de nascimento: {formState.birthday.split('-').reverse().join('/')}</p>
 	{/if}
+
+	{#if formState.error}
+		<p class="error">{formState.error}</p>
+	{/if}
 </main>
+
+<style>
+	.error {
+		color: red;
+	}
+</style>
