@@ -9,7 +9,7 @@
 	});
 </script>
 
-<main>
+<main class="container">
 	<HeaderForm name={formState.name} />
 
 	<p>Etapa: {formState.step + 1}</p>
