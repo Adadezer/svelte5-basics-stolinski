@@ -20,8 +20,6 @@
 		{/snippet}
 	</HeaderFormSnippet>
 
-	<p>Etapa: {formState.step + 1}</p>
-
 	<!--  Snippet local (declarado e usado no mesmo arquivo) -->
 	{@render formStep({ question: 'Qual é o seu nome', id: 'name', type: 'text' })}
 
