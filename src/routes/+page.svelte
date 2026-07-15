@@ -5,4 +5,5 @@
 	<li><a href="/derived">$derived</a></li>
 	<li><a href="/props">Props</a></li>
 	<li><a href="/logic">Lógica e Snippets</a></li>
+	<li><a href="/loop">Loop</a></li>
 </ul>
