@@ -1,6 +1,22 @@
+<script lang="ts">
+	import { page } from '$app/state';
+
+	// Mapa: caminho da URL -> nome do tópico.
+	const TITLES: Record<string, string> = {
+		'/state': 'State',
+		'/derived': 'Derived',
+		'/props': 'Props',
+		'/logic': 'Lógica e Snippets',
+		'/loop': 'Loops'
+	};
+
+	// page.url.pathname = caminho atual (ex.: '/loop'). $derived recalcula a cada navegação.
+	let topic = $derived(TITLES[page.url.pathname] ?? '');
+</script>
+
 <div class="header">
 	<button type="button" onclick={() => history.back()}>← Voltar</button>
-	<h1>Curso basico de Svelte 5</h1>
+	<h1>{topic ? `${topic} - ` : ''}Curso basico de Svelte 5</h1>
 </div>
 
 <style>
