@@ -1,20 +1,21 @@
 <script lang="ts">
-	import HeaderLoop from './HeaderLoop.svelte';
+	import { fly } from 'svelte/transition';
+	import HeaderAnimation from './HeaderAnimation.svelte';
 
 	const QUESTIONS = [
 		{
-			question: 'Qual é o seu nome?',
+			question: 'Digite seu nome: ',
 			id: 'name',
 			type: 'text',
 			field: 'nome'
 		},
 		{
-			question: 'Qual é a data do seu aniversário?',
+			question: 'Informe sua data de nascimento: ',
 			id: 'birthday',
 			type: 'date',
 			field: 'aniversário'
 		},
-		{ question: 'Qual sua cor favorita?', id: 'color', type: 'color', field: 'cor' }
+		{ question: 'Escolha uma cor: ', id: 'color', type: 'color', field: 'cor' }
 	] as const; // `as const` marca o array como imutável e mantém os tipos LITERAIS.
 	// Sem ele, o TS alarga `id: 'name'` para `id: string`.
 	// Com `as const`, `id` continua sendo exatamente 'name' | 'birthday' | 'color'.
@@ -22,6 +23,14 @@
 	// Extrai, a partir do array, a união dos ids possíveis: 'name' | 'birthday' | 'color'.
 	// (typeof QUESTIONS)[number] = "um item qualquer do array"; ['id'] = pega a chave id desse item.
 	type QuestionId = (typeof QUESTIONS)[number]['id'];
+
+	let formState = $state({
+		// `answers` é um "saco" de respostas indexado pelo id da pergunta.
+		// Ex.: { name: 'Ada', birthday: '1990-01-01' }
+		answers: {} as Record<QuestionId, string>,
+		step: 0,
+		error: ''
+	});
 
 	function nextStep(id: QuestionId, field: string) {
 		if (formState.answers[id]) {
@@ -32,22 +41,17 @@
 		}
 	}
 
-	let formState = $state({
-		// `answers` é um "saco" de respostas indexado pelo id da pergunta.
-		// Ex.: { name: 'Ada', birthday: '1990-01-01' }
-		answers: {} as Record<QuestionId, string>,
-		step: 0,
-		error: ''
-	});
+	// `$inspect` é uma runa de depuração e funciona como um log, porém será atualizada sempre que um valor reativo for atualizado
+	$inspect(formState.step);
 </script>
 
 <main class="container">
-	<HeaderLoop name={formState.answers.name} />
+	<HeaderAnimation name={formState.answers.name} />
 
 	{#if formState.step === QUESTIONS.length}
 		<p>Obrigado!</p>
 	{:else}
-		<p>Etapa: {formState.step + 1}</p>
+		<p>Step: {formState.step + 1}</p>
 	{/if}
 
 	<!-- - { id, question, type, field }: desestrutura os items do array QUESTIONS para obter as propriedades que eu quero.
@@ -58,7 +62,12 @@
   -->
 	{#each QUESTIONS as { id, question, type, field }, index (id)}
 		{#if formState.step === index}
-			{@render formStep({ question, id, type, field })}
+			<div
+				in:fly={{ x: 300, duration: 300, opacity: 0, delay: 500 }}
+				out:fly={{ x: -300, duration: 300, opacity: 0 }}
+			>
+				{@render formStep({ question, id, type, field })}
+			</div>
 		{/if}
 	{/each}
 
@@ -84,7 +93,7 @@
 				<label for={id}>{question}</label>
 				<input {type} {id} bind:value={formState.answers[id]} />
 			</div>
-			<button onclick={() => nextStep(id, field)}>Avançar</button>
+			<button onclick={() => nextStep(id, field)}>Proxima</button>
 		</article>
 	{/snippet}
 </main>
