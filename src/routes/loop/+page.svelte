@@ -44,7 +44,11 @@
 <main class="container">
 	<HeaderLoop name={formState.answers.name} />
 
-	<p>Etapa: {formState.step + 1}</p>
+	{#if formState.step === QUESTIONS.length}
+		<p>Obrigado!</p>
+	{:else}
+		<p>Etapa: {formState.step + 1}</p>
+	{/if}
 
 	<!-- - { id, question, type, field }: desestrutura os items do array QUESTIONS para obter as propriedades que eu quero.
 
