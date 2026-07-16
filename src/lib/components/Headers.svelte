@@ -8,7 +8,8 @@
 		'/props': 'Props',
 		'/logic': 'Lógica e Snippets',
 		'/loop': 'Loops',
-		'/effect': 'Effect / Inspect'
+		'/effect': 'Effect / Inspect',
+		'/animation': 'Animations'
 	};
 
 	// page.url.pathname = caminho atual (ex.: '/loop'). $derived recalcula a cada navegação.

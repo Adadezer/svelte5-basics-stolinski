@@ -7,4 +7,5 @@
 	<li><a href="/logic">Lógica e Snippets</a></li>
 	<li><a href="/loop">Loops</a></li>
 	<li><a href="/effect">Effect / Inspect</a></li>
+	<li><a href="/animation">Animations</a></li>
 </ul>
