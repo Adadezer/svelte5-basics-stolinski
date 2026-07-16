@@ -1,20 +1,20 @@
 <script lang="ts">
-	import HeaderLoop from './HeaderLoop.svelte';
+	import HeaderEffect from './HeaderEffect.svelte';
 
 	const QUESTIONS = [
 		{
-			question: 'Qual é o seu nome?',
+			question: 'What is your name?',
 			id: 'name',
 			type: 'text',
 			field: 'nome'
 		},
 		{
-			question: 'Qual é a data do seu aniversário?',
+			question: 'What is your birthday?',
 			id: 'birthday',
 			type: 'date',
 			field: 'aniversário'
 		},
-		{ question: 'Qual sua cor favorita?', id: 'color', type: 'color', field: 'cor' }
+		{ question: 'What is your favorite color?', id: 'color', type: 'color', field: 'cor' }
 	] as const; // `as const` marca o array como imutável e mantém os tipos LITERAIS.
 	// Sem ele, o TS alarga `id: 'name'` para `id: string`.
 	// Com `as const`, `id` continua sendo exatamente 'name' | 'birthday' | 'color'.
@@ -22,6 +22,14 @@
 	// Extrai, a partir do array, a união dos ids possíveis: 'name' | 'birthday' | 'color'.
 	// (typeof QUESTIONS)[number] = "um item qualquer do array"; ['id'] = pega a chave id desse item.
 	type QuestionId = (typeof QUESTIONS)[number]['id'];
+
+	let formState = $state({
+		// `answers` é um "saco" de respostas indexado pelo id da pergunta.
+		// Ex.: { name: 'Ada', birthday: '1990-01-01' }
+		answers: {} as Record<QuestionId, string>,
+		step: 0,
+		error: ''
+	});
 
 	function nextStep(id: QuestionId, field: string) {
 		if (formState.answers[id]) {
@@ -32,22 +40,38 @@
 		}
 	}
 
-	let formState = $state({
-		// `answers` é um "saco" de respostas indexado pelo id da pergunta.
-		// Ex.: { name: 'Ada', birthday: '1990-01-01' }
-		answers: {} as Record<QuestionId, string>,
-		step: 0,
-		error: ''
+	// `$effect` executa uma função quando o componente for montado, desmontado ou quando alguma variável dentro dele mudar.
+	$effect(() => {
+		console.log('on mounted');
+
+		return () => {
+			// Executado quando o componente for desmontado
+			// Antes que um efeito seja executado novamente
+			console.log('on unmounted');
+		};
 	});
+
+	$effect(() => {
+		// Isso será executado novamente quando `formState.step` mudar.
+		console.log('formState', formState.step);
+		// Você não deve criar um estado baseado em outro estado usando `$effect`, para isso use '$derived'
+		return () => {
+			// Antes que um efeito seja executado novamente
+			console.log('antes de o formState ser executado novamente', formState.step);
+		};
+	});
+
+	// `$inspect` é uma runa de depuração e funciona como um log, porém será atualizada sempre que um valor reativo for atualizado
+	$inspect(formState.step);
 </script>
 
 <main class="container">
-	<HeaderLoop name={formState.answers.name} />
+	<HeaderEffect name={formState.answers.name} />
 
 	{#if formState.step === QUESTIONS.length}
 		<p>Obrigado!</p>
 	{:else}
-		<p>Etapa: {formState.step + 1}</p>
+		<p>Step: {formState.step + 1}</p>
 	{/if}
 
 	<!-- - { id, question, type, field }: desestrutura os items do array QUESTIONS para obter as propriedades que eu quero.
@@ -84,7 +108,7 @@
 				<label for={id}>{question}</label>
 				<input {type} {id} bind:value={formState.answers[id]} />
 			</div>
-			<button onclick={() => nextStep(id, field)}>Avançar</button>
+			<button onclick={() => nextStep(id, field)}>Next</button>
 		</article>
 	{/snippet}
 </main>
